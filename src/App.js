@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import {dataArray}  from "./dataCollection"
+
+let suggestions = [];
 
 function App() {
+  const [showList, setShowList] = useState("");
+  const [value, setValue] = useState("");
+
+  const handleComplete = (e) => {
+      dataArray.forEach((x) => {
+          if(x.substr(0, e.target.value.length).toUpperCase() === e.target.value.toUpperCase()) {
+            suggestions.push(x);
+            /* console.log(suggestions); */
+            setShowList(suggestions.map((x, index) => {
+                return <p key={index} onClick={() => setValue(x)}> {x} </p>
+            }))
+          }
+
+          if(e.target.value === "") {
+            setShowList("")
+          }
+      })
+      setValue(e.target.value)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <h2> Typeahead component </h2>
+    <input type="text" value={value} placeholder='Type Something' onChange={handleComplete} />
+    <div>
+      {showList}
+    </div>
     </div>
   );
 }
